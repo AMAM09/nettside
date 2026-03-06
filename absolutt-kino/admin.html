@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — Absolutt Kino</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    #norsk-date-picker select,
+    #edit-date-picker select {
+      padding: 8px;
+      margin-right: 5px;
+      font-size: 15px;
+      border-radius: 6px;
+      background: #1f2833;
+      color: #fff;
+      border: 1px solid #45a29e;
+    }
+    details summary {
+      cursor: pointer;
+      font-weight: bold;
+      padding: 10px;
+      background: #0b0c10;
+      border-radius: 8px;
+      border: 1px solid #45a29e;
+      margin-top: 20px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 6px 0 14px;
+      background: #1f2833;
+      color: white;
+      border: 1px solid #45a29e;
+    }
+    textarea { min-height: 80px; }
+    button {
+      background: #45a29e;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    img.preview { width: 180px; border-radius: 10px; display: none; margin-top: 10px; }
+    .edit-panel {
+      background: #0b0c10;
+      padding: 20px;
+      margin-top: 25px;
+      border: 1px solid #45a29e;
+      border-radius: 10px;
+      display: none;
+    }
+    .danger { background: #9b1c1c; }
+    label.inline { display:flex; align-items:center; gap:8px; }
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>Absolutt Kino — Adminpanel</h1>
+</header>
+
+<main class="container">
+  <!-- LOGIN -->
+  <section id="auth-section">
+    <h2>Logg inn</h2>
+    <input id="admin-email" type="email" placeholder="E-post" />
+    <input id="admin-pass" type="password" placeholder="Passord" />
+    <button id="btn-login">Logg inn</button>
+    <p id="auth-msg"></p>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="admin-panel" style="display:none;">
+    <!-- ADD FILM -->
+    <details open>
+      <summary>🎬 Legg til film</summary>
+
+      <label>Tittel</label>
+      <input id="film-title">
+
+      <label>Beskrivelse</label>
+      <textarea id="film-desc"></textarea>
+
+      <label>Sjanger</label>
+      <select id="film-genre">
+        <option>Action</option><option>Horror</option><option>Sci-Fi</option>
+        <option>Komedie</option><option>Drama</option><option>Thriller</option>
+        <option>Eventyr</option>
+      </select>
+
+      <label>Premiere-dato</label>
+      <div id="norsk-date-picker">
+        <select id="dato-dag"></select>
+        <select id="dato-maaned"></select>
+        <select id="dato-aar"></select>
+      </div>
+
+      <label class="inline"><input id="film-upcoming" type="checkbox"> Kommende</label>
+
+      <label>Filmplakat (URL)</label>
+      <input id="film-image">
+      <img id="preview-img" class="preview">
+
+      <label>YouTube Trailer</label>
+      <input id="film-trailer">
+
+      <h3>Anmeldelse</h3>
+      <input id="review-title" placeholder="Tittel">
+      <textarea id="review-subtitle" placeholder="Ingress"></textarea>
+      <textarea id="review-plot" placeholder="Plot"></textarea>
+      <textarea id="review-acting" placeholder="Skuespill"></textarea>
+      <textarea id="review-visuals" placeholder="Visuelt"></textarea>
+      <textarea id="review-music" placeholder="Musikk"></textarea>
+      <textarea id="review-pacing" placeholder="Tempo & regi"></textarea>
+      <textarea id="review-conclusion" placeholder="Konklusjon"></textarea>
+
+      <h3>Spoiler-seksjon</h3>
+      <!-- IDer matcher admin.js: edit-review-hasSpoilers / edit-review-spoilers -->
+      <label class="inline"><input id="edit-review-hasSpoilers" type="checkbox"> Inneholder spoilers?</label>
+      <textarea id="edit-review-spoilers" placeholder="Skriv spoiler-anmeldelse her..."></textarea>
+
+      <input id="review-score" type="number" step="0.1" max="10" min="0">
+
+      <h3>Metadata</h3>
+      <input id="review-director" placeholder="Regissør">
+      <input id="review-cast" placeholder="Skuespillere">
+      <input id="review-year" type="number" placeholder="Produksjonsår">
+      <input id="review-runtime" type="number" placeholder="Varighet (min)">
+      <input id="review-country" placeholder="Land">
+      <input id="review-age" placeholder="Aldersgrense">
+      <input id="review-cover" placeholder="Cover-bilde URL">
+      <input id="review-gallery" placeholder="Galleri-bilder (kommaseparert)">
+
+      <button id="btn-add-film">Legg til film</button>
+      <p id="add-film-msg"></p>
+    </details>
+
+    <details>
+      <summary>📰 Legg til nyhet</summary>
+      <label>Tittel</label>
+      <input id="news-title">
+      <label>Kategori</label>
+      <select id="news-category">
+          <option>Ny film</option>
+          <option>Trailer</option>
+          <option>Kunngjøring</option>
+      </select>
+      <label>Bilde (URL)</label>
+      <input id="news-image">
+      <label>Nyhetstekst</label>
+      <textarea id="news-body" placeholder="Skriv artikkeltekst her..."></textarea>
+      <label>Valgfri ekstern lenke</label>
+      <input id="news-link">
+      <button id="btn-add-news">Legg til nyhet</button>
+      <p id="add-news-msg"></p>
+    </details>
+
+    <!-- MANAGE -->
+    <details>
+      <summary>🗂 Administrer filmer og nyheter</summary>
+      <div id="manage-list"></div>
+    </details>
+
+    <!-- EDIT PANEL -->
+    <div id="edit-panel" class="edit-panel">
+      <h2>Rediger film</h2>
+
+      <h3>Spoilers</h3>
+      <!-- samme ID-er som i ADD-form (konsistent med admin.js) -->
+      <label class="inline"><input id="edit-review-hasSpoilers" type="checkbox"> Inneholder spoilers?</label>
+      <textarea id="edit-review-spoilers" placeholder="Skriv spoiler-anmeldelse her..."></textarea>
+
+      <label>Tittel</label>
+      <input id="edit-title">
+
+      <label>Beskrivelse</label>
+      <textarea id="edit-desc"></textarea>
+
+      <label>Sjanger</label>
+      <select id="edit-genre">
+        <option>Action</option><option>Horror</option><option>Sci-Fi</option>
+        <option>Komedie</option><option>Drama</option><option>Thriller</option>
+        <option>Eventyr</option>
+      </select>
+
+      <label>Premiere-dato</label>
+      <div id="edit-date-picker">
+        <select id="edit-dag"></select>
+        <select id="edit-maaned"></select>
+        <select id="edit-aar"></select>
+      </div>
+
+      <label class="inline"><input id="edit-upcoming" type="checkbox"> Kommende</label>
+
+      <label>Filmplakat (URL)</label>
+      <input id="edit-image">
+      <img id="edit-preview" class="preview">
+
+      <label>YouTube Trailer</label>
+      <input id="edit-trailer">
+
+      <h3>Anmeldelse</h3>
+      <input id="edit-review-title" placeholder="Tittel">
+      <textarea id="edit-review-subtitle"></textarea>
+      <textarea id="edit-review-plot"></textarea>
+      <textarea id="edit-review-acting"></textarea>
+      <textarea id="edit-review-visuals"></textarea>
+      <textarea id="edit-review-music"></textarea>
+      <textarea id="edit-review-pacing"></textarea>
+      <textarea id="edit-review-conclusion"></textarea>
+      <input id="edit-review-score" type="number" step="0.1" max="10">
+
+      <h3>Metadata</h3>
+      <input id="edit-review-director">
+      <input id="edit-review-cast">
+      <input id="edit-review-year" type="number">
+      <input id="edit-review-runtime" type="number">
+      <input id="edit-review-country">
+      <input id="edit-review-age">
+      <input id="edit-review-cover">
+      <input id="edit-review-gallery">
+
+      <button id="btn-save-edit">Lagre endringer</button>
+      <button id="btn-cancel-edit" class="danger">Avbryt</button>
+      <p id="edit-msg"></p>
+    </div>
+
+    <button id="btn-logout" class="danger">Logg ut</button>
+  </section>
+</main>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- ditt admin-script -->
+<script src="admin.js"></script>
+</body>
+</html>

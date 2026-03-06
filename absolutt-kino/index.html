@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Absolutt Kino</title>
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* ======= TOPP-NAV ======= */
+    .top-nav {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+    }
+    .top-nav a {
+      color: #66fcf1;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .top-nav a:hover,
+    .top-nav a.active {
+      border-color: #45a29e;
+      background: #1f2833;
+    }
+
+    /* ======= FILMKORT ======= */
+    .movie-grid {
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 25px;
+    }
+
+    .movie-card {
+      background: #1f2833;
+      border-radius: 12px;
+      border: 2px solid #45a29e;
+      overflow: hidden;
+      padding-bottom: 10px;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .movie-card:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 18px #45a29eaa;
+    }
+
+    .movie-card .poster {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+    }
+
+    .movie-info {
+      padding: 12px;
+    }
+    .movie-info h2 {
+      margin: 0;
+      color: #66fcf1;
+      font-size: 22px;
+    }
+
+    .movie-meta {
+      margin-top: 5px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .genre {
+      background: #45a29e33;
+      padding: 3px 10px;
+      border-radius: 6px;
+      color: #66fcf1;
+    }
+
+    .rating-box {
+      margin-top: 10px;
+      text-align: center;
+      background: #45a29e22;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 18px;
+      color: #66fcf1;
+      font-weight: bold;
+    }
+
+    .actions {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .like-btn, .dislike-btn, .trailer-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #45a29e;
+      background: #0b0c10;
+      color: white;
+      cursor: pointer;
+    }
+    .like-btn:hover, .dislike-btn:hover, .trailer-btn:hover {
+      background: #45a29e;
+      color: #0b0c10;
+    }
+    .dislike-btn { border-color: #c3073f; }
+    .dislike-btn:hover { background: #c3073f; color: white; }
+
+    /* ======= MODAL (ANMELDELSE) ======= */
+    #review-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    #review-modal .modal-content {
+      width: 90%;
+      max-width: 900px;
+      max-height: 90vh;
+      padding: 20px;
+      overflow-y: auto;
+      border-radius: 12px;
+      border: 2px solid #45a29e;
+      background: #1f2833;
+      color: #c5c6c7;
+      position: relative;
+    }
+
+    #modal-close {
+      position:absolute;
+      top:10px;
+      right:10px;
+      padding:6px 12px;
+      background:#c3073f;
+      color:white;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+    }
+
+    #modal-cover {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+
+    .facts-box {
+      background: #0b0c10;
+      border-left: 4px solid #45a29e;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .review-section { margin-top: 18px; }
+    .review-section h3 { color:#66fcf1; margin-bottom:6px; }
+
+    .critic-score {
+      background:#45a29e33;
+      padding:12px;
+      text-align:center;
+      margin-top:20px;
+      border-radius:10px;
+      font-size:20px;
+      color:#66fcf1;
+      font-weight:bold;
+    }
+
+    .gallery {
+      margin-top:15px;
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+      gap:10px;
+    }
+    .gallery img {
+      width:100%;
+      height:110px;
+      object-fit:cover;
+      border-radius:8px;
+    }
+
+    /* ======= TRAILER POPUP ======= */
+    .trailer-popup {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 120;
+    }
+    .trailer-content {
+      position: relative;
+      width: 90%;
+      max-width: 900px;
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: 12px;
+      border: 2px solid #45a29e;
+      overflow: hidden;
+    }
+    .trailer-frame-wrapper {
+      width: 100%;
+      height: 100%;
+    }
+    .trailer-frame-wrapper iframe {
+      width: 100%;
+      height: 100%;
+    }
+    .trailer-close {
+      position:absolute;
+      top:10px;
+      right:10px;
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      border:2px solid #66fcf1;
+      background:transparent;
+      color:#66fcf1;
+      font-size:20px;
+      line-height:1;
+      cursor:pointer;
+    }
+    .trailer-close:hover {
+      background:#66fcf1;
+      color:#0b0c10;
+    }
+  </style>
+
+</head>
+
+<body>
+
+<header>
+  <h1>Absolutt Kino</h1>
+  <nav class="top-nav">
+    <a href="index.html" class="active">Hjem</a>
+    <a href="filmer.html">Filmer</a>
+    <a href="om-meg.html">Om meg</a>
+  </nav>
+</header>
+
+<main>
+  <h2 style="text-align:center; color:#66fcf1; margin-top:20px;">Filmanmeldelser</h2>
+
+  <!-- SORTERING -->
+  <div class="sort-box">
+    <label for="sort-select">Sorter etter:</label>
+    <select id="sort-select">
+      <option value="nyeste">Nyeste</option>
+      <option value="beste">Beste score</option>
+      <option value="mestlikt">Mest likt</option>
+      <option value="kommende">Kommende</option>
+    </select>
+  </div>
+
+  <!-- FILMGRID -->
+  <div id="movies-container" class="movie-grid"></div>
+
+  <!-- NYHETER -->
+  <h2 style="text-align:center; color:#66fcf1; margin-top:40px;">Nyheter</h2>
+  <div id="news-container" class="news-grid"></div>
+</main>
+
+<!-- REVIEW MODAL -->
+<div id="review-modal">
+  <div class="modal-content">
+
+    <button id="modal-close">Lukk</button>
+
+    <img id="modal-cover" alt="">
+
+    <h1 id="modal-title"></h1>
+    <p id="modal-subtitle"></p>
+
+    <div class="facts-box" id="modal-facts"></div>
+
+    <div id="modal-sections"></div>
+
+    <div class="critic-score" id="modal-score"></div>
+
+    <div class="gallery" id="modal-gallery"></div>
+
+  </div>
+</div>
+
+<!-- TRAILER POPUP -->
+<div id="trailer-popup">
+  <button id="trailer-close">X</button>
+  <div class="popup-frame">
+    <iframe id="trailer-frame" allow="autoplay; encrypted-media"></iframe>
+  </div>
+</div>
+
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- HOVEDSCRIPT for index -->
+<script src="main.js"></script>
+
+</body>
+</html>

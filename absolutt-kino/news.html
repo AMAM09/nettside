@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nyhet – Absolutt Kino</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<style>
+.news-article {
+  width: 90%;
+  max-width: 900px;
+  margin: 30px auto;
+  color: #c5c6c7;
+}
+
+.news-article img.banner {
+  width: 100%;
+  border-radius: 12px;
+  border: 2px solid #45a29e;
+  margin-bottom: 20px;
+}
+
+.news-article h1 {
+  color: #66fcf1;
+  margin-bottom: 10px;
+}
+
+.news-tag-big {
+  display: inline-block;
+  background: #45a29e;
+  color: #0b0c10;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.news-body {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-top: 15px;
+  white-space: pre-wrap;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Absolutt Kino – Nyhet</h1>
+</header>
+
+<div class="news-article">
+  <span id="news-tag" class="news-tag-big"></span>
+  <h1 id="news-title"></h1>
+  <img id="news-img" class="banner">
+  <p id="news-date"></p>
+  <div id="news-body" class="news-body"></div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyADgXZ-KnvBfZTdtBsyedoixwLUqxExxWY",
+  authDomain: "absolutt-kino.firebaseapp.com",
+  projectId: "absolutt-kino"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+function getId() {
+  const p = new URLSearchParams(location.search);
+  return p.get("id");
+}
+
+async function loadNews() {
+  const id = getId();
+  if (!id) return;
+
+  const doc = await db.collection("news").doc(id).get();
+  if (!doc.exists) return;
+
+  const n = doc.data();
+
+  document.getElementById("news-tag").textContent = n.category || "Nyhet";
+  document.getElementById("news-title").textContent = n.title;
+  document.getElementById("news-img").src = n.img;
+  document.getElementById("news-date").textContent = n.date || "";
+  document.getElementById("news-body").textContent = n.body || "";
+}
+
+loadNews();
+</script>
+
+</body>
+</html>

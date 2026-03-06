@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Filmer – Absolutt Kino</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .top-nav {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+    }
+    .top-nav a {
+      color: #66fcf1;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .top-nav a:hover,
+    .top-nav a.active {
+      border-color: #45a29e;
+      background: #1f2833;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .tabs button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #45a29e;
+      background: #0b0c10;
+      color: #66fcf1;
+      cursor: pointer;
+    }
+    .tabs button.active {
+      background: #45a29e;
+      color: #0b0c10;
+    }
+
+    .movie-grid {
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 25px;
+    }
+
+    .movie-card {
+      background: #1f2833;
+      border-radius: 12px;
+      border: 2px solid #45a29e;
+      overflow: hidden;
+      padding-bottom: 10px;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .movie-card:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 18px #45a29eaa;
+    }
+
+    .poster {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+    }
+
+    .movie-info {
+      padding: 12px;
+    }
+    .movie-info h2 {
+      margin: 0;
+      color: #66fcf1;
+      font-size: 22px;
+    }
+
+    .movie-meta {
+      margin-top: 5px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Filmer – Absolutt Kino</h1>
+  <nav class="top-nav">
+    <a href="index.html">Hjem</a>
+    <a href="filmer.html" class="active">Filmer</a>
+    <a href="om-meg.html">Om meg</a>
+  </nav>
+</header>
+
+<div class="tabs">
+  <button data-tab="upcoming" class="active">Kommende</button>
+  <button data-tab="watchlist">Watchlist</button>
+  <button data-tab="reviewed">Anmeldt</button>
+</div>
+
+<div id="films-container" class="movie-grid"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- KUN scriptet for filmer-siden -->
+<script src="main-filmer.js"></script>
+
+</body>
+</html>
