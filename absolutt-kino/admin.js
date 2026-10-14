@@ -2,8 +2,8 @@
 
 // -------------------- KONFIG --------------------
 const firebaseConfig = {
-  apiKey: "AIzaSyADgXZ-KnvBfZTdtBsyedoixwLUqxExxWY",
-  authDomain: "absolutt-kino.firebaseapp.com",
+  apiKey: 
+  authDomain: 
   projectId: "absolutt-kino",
   messagingSenderId: "808056313896",
   appId: "1:808056313896:web:70c00293759ca080143d1d"
